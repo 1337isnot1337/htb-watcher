@@ -1,7 +1,15 @@
 #!/bin/bash
-echo "Hi, thanks for using the script! Running now..."
 
-# This script is most certainly still in dev and should not be taken seriously. 
+# Function to handle cleanup before exiting
+cleanup() {
+    echo -e "\nExiting..."
+    exit 0
+}
+
+# Trap Ctrl+C signal to call the cleanup function
+trap cleanup SIGINT
+
+echo "Hi, thanks for using the script! Running now..."
 
 # Colors :3
 RED='\033[0;31m'
@@ -15,7 +23,7 @@ NC='\033[0m' # No Color
 
 # Initialize variables with default values
 verbose=false
-output_file="$HOME/my_data/watcher/json_output.log"
+output_file="$HOME/my_data/json_output.log"
 
 # Set GOPATH and update PATH
 export GOPATH=$HOME/go
@@ -26,7 +34,7 @@ export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 update_line_color() {
     local line="$1"
     sed -i "s@$line@$YELLOW$line$NC@g" "$output_file"
-    echo "Flagged line: $line"
+    echo -e "${PURPLE}Flagged line: $line${NC}"
 }
 
 # Start converting logs to JSON in the background
