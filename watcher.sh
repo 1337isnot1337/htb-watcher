@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Function to handle cleanup before exiting
 cleanup() {
     echo -e "\nExiting..."
@@ -23,7 +22,7 @@ NC='\033[0m' # No Color
 
 # Initialize variables with default values
 verbose=false
-output_file="$HOME/my_data/json_output.log"
+output_file="${PWD}/json_output.log"
 
 # Set GOPATH and update PATH
 export GOPATH=$HOME/go
@@ -64,6 +63,22 @@ while true; do
 
         # Get the current timestamp
         current_timestamp=$(date +%s)
+
+        # Check if the log entry indicates a solved challenge
+        if echo "$log_entry" | grep -q "solved challenge"; then
+            # Extracting challenge name and category
+            challenge_name=$(echo "$log_entry" | grep -oP 'solved challenge \K.*(?= from)')
+            challenge_category=$(echo "$log_entry" | grep -oP 'from \K.*$')
+
+            # Construct JSON object for solved challenge
+            json="{\"timestamp\":\"$timestamp\", \"username\":\"$username\", \"challenge name\":\"$challenge_name\", \"challenge category\":\"$challenge_category\"}"
+
+            # Output the JSON object for solved challenge
+            echo -e "${GREEN}JSON object:${NC} $json"
+
+            # Append JSON object to the output file for solved challenge
+            echo "$json" >> "$output_file"
+        fi
 
         # Check if the user's last occurrence timestamp is within the last hour
         if [ -n "${user_last_occurrence[$username]}" ]; then
