@@ -10,7 +10,7 @@ trap cleanup SIGINT
 
 echo "Hi, thanks for using the script! Running now..."
 
-# Colors :3
+# Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
@@ -20,7 +20,7 @@ CYAN='\033[0;36m'
 WHITE='\033[0;37m'
 NC='\033[0m' # No Color
 
-# Initialize variables with default values
+# FLAG TESTING Initialize variables with default values
 verbose=false
 output_file="${PWD}/json_output.log"
 
@@ -36,7 +36,7 @@ update_line_color() {
     echo -e "${PURPLE}Flagged line: $line${NC}"
 }
 
-# Start converting logs to JSON in the background
+# Start converting logs to JSON
 echo "Recording data and converting..."
 declare -A user_last_occurrence  # Associative array to track the most recent occurrence of each user
 
@@ -64,7 +64,7 @@ while true; do
         # Get the current timestamp
         current_timestamp=$(date +%s)
 
-        # Check if the log entry indicates a solved challenge
+        # Check if the log entry indicates a challenge
         if echo "$log_entry" | grep -q "solved challenge"; then
             # Extracting challenge name and category
             challenge_name=$(echo "$log_entry" | grep -oP 'solved challenge \K.*(?= from)')
@@ -76,7 +76,7 @@ while true; do
             # Output the JSON object for solved challenge
             echo -e "${GREEN}JSON object:${NC} $json"
 
-            # Append JSON object to the output file for solved challenge
+            # Append JSON object to the output file for challenge
             echo "$json" >> "$output_file"
         fi
 
